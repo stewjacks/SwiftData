@@ -30,6 +30,8 @@ import UIKit
 
 public struct SwiftData {
     
+    //let IDENTIFIER = "ID"
+
     
     // MARK: - Public SwiftData Functions
     
@@ -1199,7 +1201,7 @@ public struct SwiftData {
         class func createPath() -> String {
             
             let docsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as String
-            let databaseStr = "SwiftData.sqlite"
+            let databaseStr = "usagetrackerdb.sqlite"
             let dbPath = docsPath.stringByAppendingPathComponent(databaseStr)
             
             return dbPath
@@ -1326,7 +1328,7 @@ public struct SwiftData {
                 return sqlite3_column_int(statement, index) != 0
             case "DATE", "DATETIME":
                 let dateFormatter = NSDateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
                 let text = UnsafePointer<Int8>(sqlite3_column_text(statement, index))
                 if let string = String.fromCString(text) {
                     return dateFormatter.dateFromString(string)
@@ -1580,7 +1582,7 @@ public struct SwiftData {
                     return nil
                 }
                 let imageAsData = NSData(contentsOfFile: fullPath)
-                return UIImage(data: imageAsData)
+                return UIImage(data: imageAsData!)
             }
             return nil
         }
@@ -1683,7 +1685,7 @@ extension SwiftData.SQLiteDB {
             
             if obj is NSDate {
                 let dateFormatter = NSDateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
                 return "\(escapeValue(dateFormatter.stringFromDate(obj as NSDate)))"
             }
             
